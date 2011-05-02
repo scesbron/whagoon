@@ -1,0 +1,73 @@
+#{extends 'main.html' /}
+#{set title:'Dashboard' /}
+
+<div id="mainContent">
+<section id="comments">
+<center><h1>Stats</h1></center>
+<article>
+
+<div id="placeholder" style="width: 800px; height: 400px;"></div>
+
+<script id="source" language="javascript" type="text/javascript">
+$(function () {
+	var options = {
+			grid: {
+				hoverable: true, clickable: true, backgroundColor: { colors: ["#000", "#999"] }
+			},
+	        series: {
+	            lines: {show: true}
+	        },
+	        legend: { noColumns: 2, position: "ne" },
+	        yaxis: { min: 0 },
+	        xaxis: {mode: "time", timeformat: "%H:%M:%S"}
+	};
+    var xVal = 0;
+    var nbPoints = 60;
+    var interval = 5000;
+    var data = [];
+    var plot = $.plot( $("#placeholder"), data, options);
+    function getData(){
+        $.getJSON("@{Memory.used}", function(json){
+            //alert(json);
+            data.push([json.time, json.value]);
+            if(data.length>nbPoints){
+                // only allow ten points
+                data = data.splice(1);
+            }
+            xVal++;
+            plot.setData([data]);
+            plot.setupGrid();
+            plot.draw();
+        });
+
+    }
+    // Permet d'afficher les erreurs pour debuggage
+    $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
+          alert(textStatus);
+          alert(errorThrown);
+          alert(XMLHttpRequest.responseText);
+      }});
+
+    function addData(){
+        // This could be an ajax call back.
+        var yVal1 = Math.floor(Math.random()*11);
+        var datum1 = [xVal, yVal1];
+        data.push(datum1);
+        if(data.length>10){
+            // only allow ten points
+            data = data.splice(1);
+        }
+        xVal++;
+        plot.setData([data]);
+        plot.setupGrid();
+        plot.draw();
+    }
+    getData()
+    setInterval(getData, interval);
+
+});
+</script>
+
+</article>
+ </section>
+</div>
