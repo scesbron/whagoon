@@ -1,7 +1,29 @@
 # you describe your data using the YAML notation here
 # and then load them using Fixtures.load("data.yml")
 
-# User(bob):
-#   email: bob@gmail.com
-#   password: secret
-#   fullname: Bob
+- !!models.Environment
+    id:         !!Id[Long] 1
+    name:       production
+
+- !!models.WebloDomain
+    id:         !!Id[Long] 1
+    name:       dd1s00
+    host:       55.10.111.42
+    port:       15000
+    username:   weblogic
+    password:   weblogic
+    env_id:     1
+
+- !!models.WebloServer
+    id:         !!Id[Long] 1
+    name:       dd1s00_c01_s01
+    host:       55.10.111.42
+    port:       15002
+    domain_id:  1
+
+- !!models.WebloServer
+    id:         !!Id[Long] 2
+    name:       dd1s00_c01_s02
+    host:       55.10.111.42
+    port:       15004
+    domain_id:  1
